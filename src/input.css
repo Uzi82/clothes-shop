@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+li {
+    list-style-type: none; /* Убираем маркеры */
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.buttons {
+    @apply text-white text-base border-2 border-white px-2 py-px rounded-md m-auto hover:bg-white hover:text-indigo-500 duration-300
+}
+
+.align-center {
+    align-items: center;
+}
+.width {
+    width: 1280px;
+}
+.widthCard {
+    width: 240px
+}
