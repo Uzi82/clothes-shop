@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react'
+import { useAppDispatch } from './hooks'
+import { addToCart } from './store/cartSlice'
+import { addLiked } from './store/likedSlice'
+import { Link } from 'react-router-dom'
 
-interface user {
+export interface user {
     name: string,
     role: string,
     _id: string
 }
 
-interface category {
+export interface category {
     name: string,
     slug: string,
     _id: string
 }
 
-interface data {
+export interface data {
     category: category,
     createdAt: string,
     createdBy: user
@@ -23,14 +27,6 @@ interface data {
     title: string,
     updatedAt: string,
     _id: string
-}
-
-function like(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void{
-
-}
-
-function cart(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void{
-
 }
 
 function makeHighLetter(str: string): string {
@@ -50,7 +46,14 @@ export default function MainPage(): JSX.Element {
             .then(response => response.json())
             .then(json => setData(json.data))
     }, [])
+    const dispatch = useAppDispatch()
+    function like(product: data): void{
+        dispatch(addLiked(product))
+    }
     
+    function cart(product: data): void{
+        dispatch(addToCart(product))
+    }
     let render: JSX.Element = data.map((el: data) => {
         if(el.image === "" || el.image === undefined) {
             el.image = './images/NoImage.png'
@@ -62,10 +65,10 @@ export default function MainPage(): JSX.Element {
                     <img src={el.image} />
                     <h1 className='text-white text-base text-center mt-1'>{el.title}</h1>
                     <div className='flex flex-row justify-between px-3'>
-                        <button onClick={like} className='buttons'>
+                        <button onClick={() => like(el)} className='buttons'>
                             Like
                         </button>
-                        <button onClick={cart} className='buttons'>
+                        <button onClick={() => cart(el)} className='buttons'>
                             Add to cart
                         </button>
                     </div>
@@ -74,11 +77,14 @@ export default function MainPage(): JSX.Element {
         )
     })
     return(
-    <>
+    <>  
         <header className='w-screen h-20 bg-indigo-700 flex justify-center align-center'>
             <div className='width flex justify-between align-center'>
                 <h1 className='text-white text-4xl'>React Shop</h1>
-                <button className='text-white text-3xl border-2 w-fit h-fit rounded-md px-3 py-px hover:text-indigo-700 hover:bg-white duration-300'>Profile</button>
+                <div className="flex flex-row gap-5 justify-between">
+                    <Link to={'/cart'} className='text-white text-3xl border-2 w-fit h-fit rounded-md px-3 py-px hover:text-indigo-700 hover:bg-white duration-300'>Cart</Link>
+                    <Link to={'/liked'} className='text-white text-3xl border-2 w-fit h-fit rounded-md px-3 py-px hover:text-indigo-700 hover:bg-white duration-300'>Liked</Link>
+                </div>
             </div>
         </header>
         <main className='flex justify-center'>
